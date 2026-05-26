@@ -10,7 +10,7 @@ export const routes: Routes = [
     path: 'tasks',
     loadComponent: () => import('./features/tasks/tasks.page').then((m) => m.TasksPage),
   },
-  // ⚡ PROTECCIÓN DE RUTAS (WILDCARD)
+  
   // Cualquier ruta que no coincida con las de arriba (ej. /categories) será redirigida a 'tasks'
   {
     path: '**',

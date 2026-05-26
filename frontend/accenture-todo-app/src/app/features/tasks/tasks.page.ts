@@ -133,7 +133,7 @@ premiumUiEnabled$ = this.featureFlagService.isPremiumUiEnabled$;
     this.cdr.markForCheck();
   }
 
- // ⚡ ABRIR MODAL DE EDICIÓN
+ //  ABRIR MODAL DE EDICIÓN
   openEditModal(task: Task, event?: Event) {
     if (event) event.stopPropagation();
     this.taskToEdit = task;
@@ -143,7 +143,7 @@ premiumUiEnabled$ = this.featureFlagService.isPremiumUiEnabled$;
     this.cdr.detectChanges(); // FORZAMOS EL DIBUJADO INMEDIATO
   }
 
-  // ⚡ CERRAR MODAL
+  //  CERRAR MODAL
   closeEditModal() {
     this.isEditModalOpen = false;
     this.cdr.detectChanges(); // FORZAMOS EL DIBUJADO INMEDIATO
@@ -153,7 +153,7 @@ premiumUiEnabled$ = this.featureFlagService.isPremiumUiEnabled$;
     }, 300);
   }
 
-  // ⚡ GUARDAR EDICIÓN DESDE EL MODAL
+  //  GUARDAR EDICIÓN DESDE EL MODAL
   async saveEdit() {
     if (!this.taskToEdit || this.editTaskTitle.trim() === '') return;
     await this.taskService.updateTask(this.taskToEdit.id, this.editTaskTitle, this.editTaskCategoryId || undefined);

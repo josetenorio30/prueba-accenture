@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FranquiciaRepository extends JpaRepository<Franquicia, Long> {
-    // Spring Data JPA provee automáticamente los métodos CRUD básicos.
+
 }
