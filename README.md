@@ -21,7 +21,7 @@ Para evaluar, compilar y ejecutar cada parte de este sistema, por favor diríget
 * Instrucciones para levantar el entorno de desarrollo con Ionic.
 * Instrucciones para la compilación de instaladores nativos (APK vía Cordova).
 
-👉 **[Ver Documentación del Backend (API)](./api/api/api/Readme.md)**
+👉 **[Ver Documentación del Backend (API)](./api/api/Readme.md)**
 *En este archivo encontrarás:*
 * Requisitos previos del servidor.
 * Instrucciones de instalación y ejecución local.
