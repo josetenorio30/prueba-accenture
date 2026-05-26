@@ -1,0 +1,216 @@
+<ion-menu contentId="main-content" type="overlay" class="modern-menu">
+  <ion-header class="ion-no-border">
+    <ion-toolbar class="menu-toolbar">
+      <div class="menu-header">
+        <div>
+          <p class="menu-subtitle">Organización</p>
+          <h2>Categorías</h2>
+        </div>
+        <div class="menu-avatar">JT</div>
+      </div>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="menu-content">
+    <div class="menu-search">
+      <ion-icon name="search-outline"></ion-icon>
+      <input type="text" placeholder="Buscar categoría..." />
+    </div>
+
+    <ion-list lines="none" *ngIf="(categories$ | async) as categories">
+      <div *ngIf="categories.length === 0" class="empty-menu">
+        <div class="empty-icon">
+          <ion-icon name="grid-outline"></ion-icon>
+        </div>
+        <h3>No hay categorías</h3>
+        <p>Crea una categoría para empezar.</p>
+      </div>
+
+      <ion-item *ngFor="let cat of categories" class="menu-category-item">
+        <div class="category-dot" [style.background]="cat.color"></div>
+        <ion-label>
+          <h3>{{ cat.name }}</h3>
+        </ion-label>
+        <div class="menu-actions">
+          <ion-button fill="clear" class="ghost-btn" (click)="editCategory(cat)">
+            <ion-icon name="pencil-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" class="ghost-btn danger-btn" (click)="deleteCategory(cat)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+
+  <ion-footer class="ion-no-border menu-footer">
+    <ion-button expand="block" class="premium-btn" (click)="presentAddCategory()">
+      <ion-icon name="add-outline" slot="start"></ion-icon> Nueva Categoría
+    </ion-button>
+  </ion-footer>
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+
+  <ion-header class="ion-no-border floating-header">
+    <ion-toolbar class="transparent-toolbar">
+      <ion-buttons slot="start">
+        <ion-menu-button color="dark"></ion-menu-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" class="notification-btn">
+          <ion-icon name="notifications-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="custom-bg ion-padding">
+
+    <ng-container *ngIf="premiumUiEnabled$ | async; else basicUi">
+
+      <div class="dashboard-header">
+        <div>
+          <p class="welcome-text">Buenos días 👋</p>
+          <h1>Mis tareas</h1>
+          <p class="dashboard-subtitle">Mantén tu día organizado y enfocado.</p>
+        </div>
+        <div class="profile-badge">JT</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue">
+            <ion-icon name="time-outline"></ion-icon>
+          </div>
+          <div>
+            <h2>{{ pendingTasksCount$ | async }}</h2>
+            <p>Pendientes</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">
+            <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+          </div>
+          <div>
+            <h2>{{ completedTasksCount$ | async }}</h2>
+            <p>Completadas</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-add-bar">
+        <ion-select [(ngModel)]="selectedCategoryIdForNewTask" interface="popover" class="modern-select">
+          <ion-select-option [value]="null">General</ion-select-option>
+          <ion-select-option *ngFor="let cat of (categories$ | async)" [value]="cat.id">
+            {{ cat.name }}
+          </ion-select-option>
+        </ion-select>
+        
+        <div class="divider"></div>
+        
+        <ion-input [(ngModel)]="newTaskTitle" placeholder="¿Qué necesitas hacer hoy?" class="modern-input" (keyup.enter)="addTask()"></ion-input>
+        
+        <ion-button fill="clear" class="floating-add-btn" (click)="addTask()">
+          <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="filter-scroll" *ngIf="(categories$ | async) as categories">
+        <ion-chip (click)="setFilter(null)" [class.active-chip]="(selectedCategoryId$ | async) === null">
+          ✨ Todas
+        </ion-chip>
+        <ion-chip *ngFor="let cat of categories" (click)="setFilter(cat.id)"
+          [class.active-chip]="(selectedCategoryId$ | async) === cat.id">
+          {{ cat.name }}
+        </ion-chip>
+      </div>
+
+      <div class="task-grid">
+        <ng-container *ngIf="(filteredTasks$ | async) as tasks">
+          <div *ngIf="tasks.length === 0" class="empty-state">
+            <div class="empty-illustration">
+              <ion-icon name="sparkles-outline"></ion-icon>
+            </div>
+            <h2>Todo despejado ✨</h2>
+            <p>Disfruta el resto de tu día.</p>
+          </div>
+
+          <div class="modern-task-card" *ngFor="let task of tasks; trackBy: trackById" [class.completed]="task.completed">
+            <div class="task-left">
+              <ion-checkbox [checked]="task.completed" (ionChange)="toggleComplete(task)"></ion-checkbox>
+              <div class="task-info">
+                <h3>{{ task.title }}</h3>
+                <p>
+                  <span class="task-category" *ngIf="task.categoryId">Categoría asignada</span>
+                  <span class="task-status">{{ task.completed ? 'Completada' : 'Pendiente' }}</span>
+                </p>
+              </div>
+            </div>
+            <div class="task-actions">
+              <ion-button fill="clear" class="action-btn" (click)="openEditModal(task, $event)"> 
+                <ion-icon name="pencil-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" class="action-btn delete-btn" (click)="delete(task)">
+                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-template #basicUi>
+      <div style="margin-top: 20px;">
+        <h2 style="font-weight: bold; margin-bottom: 20px; color: #333;">Tareas (Modo Básico)</h2>
+        
+        <ion-item style="border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
+          <ion-input [(ngModel)]="newTaskTitle" placeholder="Agregar tarea simple..." (keyup.enter)="addTask()"></ion-input>
+          <ion-button slot="end" (click)="addTask()">Añadir</ion-button>
+        </ion-item>
+
+        <ion-list style="background: transparent;">
+          <ion-item *ngFor="let task of (filteredTasks$ | async)" style="border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee;">
+            <ion-checkbox slot="start" [checked]="task.completed" (ionChange)="toggleComplete(task)"></ion-checkbox>
+            <ion-label>{{ task.title }}</ion-label>
+            <ion-button fill="clear" color="danger" slot="end" (click)="delete(task)">
+              <ion-icon name="trash" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ng-template>
+
+    <ion-modal [isOpen]="isEditModalOpen" (didDismiss)="closeEditModal()" class="modern-modal" [initialBreakpoint]="0.55" [breakpoints]="[0, 0.55, 0.85]">
+      <ng-template>
+        <ion-header class="ion-no-border">
+          <ion-toolbar class="menu-toolbar">
+            <ion-title style="font-weight: 700;">Editar Tarea</ion-title>
+            <ion-buttons slot="end">
+              <ion-button color="medium" (click)="closeEditModal()">Cancelar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content class="ion-padding custom-bg">
+          <div class="glass-add-bar" style="margin-top: 10px;">
+            <ion-select [(ngModel)]="editTaskCategoryId" interface="popover" class="modern-select">
+              <ion-select-option [value]="null">General</ion-select-option>
+              <ion-select-option *ngFor="let cat of (categories$ | async)" [value]="cat.id">
+                {{ cat.name }}
+              </ion-select-option>
+            </ion-select>
+            <div class="divider"></div>
+            <ion-input [(ngModel)]="editTaskTitle" placeholder="Título de la tarea" class="modern-input" (keyup.enter)="saveEdit()"></ion-input>
+          </div>
+
+          <div style="margin-top: 25px;">
+            <ion-button expand="block" class="premium-btn" (click)="saveEdit()">
+              Guardar Cambios
+            </ion-button>
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+  </ion-content>
+</div>
