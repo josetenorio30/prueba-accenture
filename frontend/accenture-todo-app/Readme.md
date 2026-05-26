@@ -1,12 +1,11 @@
 
-```markdown
+
 # 📱 To-Do List Mobile Application (Accenture Assessment)
 
 Solución robusta para la gestión de tareas y categorías en entornos móviles, desarrollada con **Ionic 7**, **Angular 17+** utilizando **Componentes Standalone**, y gobernada de forma remota mediante **Firebase Remote Config**.
 
 La aplicación implementa un diseño UX/UI de vanguardia con interfaces adaptativas, persistencia local completa y optimizaciones avanzadas de rendimiento para asegurar una experiencia fluida y nativa.
 
----
 
 ## 🏗️ Arquitectura del Proyecto
 
