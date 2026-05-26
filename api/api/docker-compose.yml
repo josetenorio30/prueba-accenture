@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Contenedor de la Base de Datos
+  mysql-db:
+    image: mysql:8.0
+    container_name: franquicias-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: franquicias_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: accenture_user
+      MYSQL_PASSWORD: accenture_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+
+  # Contenedor de la API (Nuestra aplicación Spring Boot)
+  api:
+    build: .
+    container_name: franquicias-api
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      # Sobrescribimos la URL para que apunte al contenedor de la BD en lugar de localhost
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/franquicias_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: accenture_user
+      SPRING_DATASOURCE_PASSWORD: accenture_password
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+
+volumes:
+  mysql-data:
