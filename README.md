@@ -15,13 +15,13 @@ El código fuente está dividido en dos módulos principales, cada uno con su pr
 
 Para evaluar, compilar y ejecutar cada parte de este sistema, por favor dirígete a la documentación detallada ubicada dentro de cada módulo. 
 
-👉 **[Ver Documentación del Frontend (Mobile App)](./frontend/accenture-todo-app/README.md)**
+👉 **[Ver Documentación del Frontend (Mobile App)](./frontend/accenture-todo-app/Readme.md)**
 *En este archivo encontrarás:*
 * Respuestas técnicas sobre los desafíos de arquitectura y optimización de rendimiento.
 * Instrucciones para levantar el entorno de desarrollo con Ionic.
 * Instrucciones para la compilación de instaladores nativos (APK vía Cordova).
 
-👉 **[Ver Documentación del Backend (API)](./api/api/api/README.md)**
+👉 **[Ver Documentación del Backend (API)](./api/api/api/Readme.md)**
 *En este archivo encontrarás:*
 * Requisitos previos del servidor.
 * Instrucciones de instalación y ejecución local.
