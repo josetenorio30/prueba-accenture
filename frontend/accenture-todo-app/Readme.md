@@ -1,4 +1,3 @@
----
 
 ```markdown
 # 📱 To-Do List Mobile Application (Accenture Assessment)
